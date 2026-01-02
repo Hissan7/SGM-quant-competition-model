@@ -13,3 +13,4 @@ venv/
 
 # Data 
 results/
+data/processed
