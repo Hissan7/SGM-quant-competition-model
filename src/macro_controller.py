@@ -56,7 +56,7 @@ def rotation_g(month: int, horizon_months: int = 9) -> float:
     """
     # keep it stable for small universes
     x = (month / max(horizon_months, 1)) * 12 - 6  # map to [-6, +6]
-    g = 1.0 / (1.0 + np.exp(-x))
+    g = 1.0 / (1.0 + np.exp(-x)) # sigmoid
     return float(g)
 
 
