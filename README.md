@@ -17,4 +17,4 @@ ML-driven, macro-aware portfolio optimization framework.
 - Matplotlib
 
 ## Authors
-- Hissan Omar Msci Artificial Intelligence, King's College London
+- Hissan Omar | MSci Artificial Intelligence | King's College London
