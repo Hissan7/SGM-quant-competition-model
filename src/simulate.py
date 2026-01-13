@@ -75,7 +75,7 @@ def plot_rotation(metrics: pd.DataFrame) -> None:
     plt.plot(metrics["month"], metrics["w_cyclical"], label="Cyclical/Neutral weight")
     plt.xlabel("Month")
     plt.ylabel("Portfolio weight")
-    plt.title("Macro Rotation (Defensive → Growth)")
+    plt.title("Macro Rotation (Defensive → Growth)") #metric plot 
     plt.legend()
     plt.tight_layout()
 
