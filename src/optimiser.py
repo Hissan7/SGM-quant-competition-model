@@ -7,6 +7,7 @@ import pandas as pd
 import cvxpy as cp
 
 from src.macro_controller import add_buckets, macro_targets
+from src.ml_signal import fit_predict_mu_sigma
 
 
 @dataclass(frozen=True)
@@ -35,9 +36,9 @@ def solve_weights(
     df = add_buckets(universe).copy().reset_index(drop=True)
     n = len(df)
 
-    mu = df["target_return"].to_numpy(dtype=float)
+    mu, sigma_ml, _meta = fit_predict_mu_sigma(df, alpha=1.0, n_boot=200)
 
-    width = df["range_width"].to_numpy(dtype=float)
+    width = sigma_ml
     if np.all(np.isnan(width)):
         width = np.zeros(n)
     else:
@@ -69,13 +70,22 @@ def solve_weights(
 
     growth_cap = len(idx_gro) * cfg.w_max
     defensive_cap = len(idx_def) * cfg.w_max
+    cyclical_cap = len(idx_cyc) * cfg.w_max
 
-    growth_max_feasible = min(mt.growth_max, growth_cap - 1e-6)
-    growth_min_feasible = min(mt.growth_min, growth_cap - 1e-6)
-    defensive_min_feasible = min(mt.defensive_min, defensive_cap - 1e-6)
+    # If a bucket is empty, its cap is 0 and constraints like w_gro >= ... would be impossible.
+    if len(idx_gro) == 0:
+        raise ValueError("No GROWTH_AI assets found; cannot enforce growth constraints.")
+    if len(idx_def) == 0:
+        raise ValueError("No DEFENSIVE assets found; cannot enforce defensive constraints.")
 
-    # ensure min <= max
-    growth_min_feasible = min(growth_min_feasible, growth_max_feasible - 1e-6)
+    # Clip macro targets to feasible values
+    growth_max_feasible = min(mt.growth_max, max(growth_cap - 1e-6, 0.0))
+    growth_min_feasible = min(mt.growth_min, max(growth_cap - 1e-6, 0.0))
+    defensive_min_feasible = min(mt.defensive_min, max(defensive_cap - 1e-6, 0.0))
+
+    # Ensure min <= max (and don't allow negative mins)
+    growth_max_feasible = max(growth_max_feasible, 0.0)
+    growth_min_feasible = max(min(growth_min_feasible, growth_max_feasible - 1e-6), 0.0)
 
     constraints = [
         cp.sum(w) == 1.0,
@@ -144,6 +154,8 @@ def solve_weights(
             "growth_min": growth_min_feasible,
             "growth_max": growth_max_feasible,
             "growth_cap": float(growth_cap),
+            "defensive_cap": float(defensive_cap),
+            "cyclical_cap": float(cyclical_cap),
         },
     }
 
