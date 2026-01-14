@@ -1,3 +1,5 @@
+![Logo1](KCL.png) ![Logo2](SGM.png)
+
 # Strand Global Macro Quant Competition  
 
 **Macro-Driven Portfolio Optimisation with Risk, Turnover, and Dividend Awareness**
