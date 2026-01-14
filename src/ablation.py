@@ -62,11 +62,35 @@ def summarize(metrics_all: pd.DataFrame) -> pd.DataFrame:
     return summary.sort_values("mean_objective", ascending=False)
 
 
+# def plot_growth_paths(metrics_all: pd.DataFrame) -> None:
+#     plt.figure()
+#     for name in VARIANTS:
+#         sub = metrics_all[metrics_all["variant"] == name]
+#         plt.plot(sub["month"], sub["w_growth_ai"], label=name)
+#     plt.xlabel("Month")
+#     plt.ylabel("Growth/AI weight")
+#     plt.title("Growth Allocation Over Time (Ablation)")
+#     plt.legend()
+#     plt.tight_layout()
+#     OUT_PLOTS.mkdir(parents=True, exist_ok=True)
+#     plt.savefig(OUT_PLOTS / "ablation_growth_paths.png", dpi=200)
+#     plt.close()
+
 def plot_growth_paths(metrics_all: pd.DataFrame) -> None:
     plt.figure()
-    for name in VARIANTS:
+
+    order = ["baseline", "macro_only", "macro_robust", "macro_robust_ml"]
+    styles = {
+        "baseline": dict(marker="o", linewidth=2),
+        "macro_only": dict(marker="s", linewidth=2),
+        "macro_robust": dict(marker="^", linewidth=2),
+        "macro_robust_ml": dict(marker="D", linewidth=2),
+    }
+
+    for name in order:
         sub = metrics_all[metrics_all["variant"] == name]
-        plt.plot(sub["month"], sub["w_growth_ai"], label=name)
+        plt.plot(sub["month"], sub["w_growth_ai"], label=name, **styles[name])
+
     plt.xlabel("Month")
     plt.ylabel("Growth/AI weight")
     plt.title("Growth Allocation Over Time (Ablation)")
@@ -75,7 +99,6 @@ def plot_growth_paths(metrics_all: pd.DataFrame) -> None:
     OUT_PLOTS.mkdir(parents=True, exist_ok=True)
     plt.savefig(OUT_PLOTS / "ablation_growth_paths.png", dpi=200)
     plt.close()
-
 
 def plot_turnover_paths(metrics_all: pd.DataFrame) -> None:
     plt.figure()
@@ -110,6 +133,11 @@ def main() -> None:
 
     metrics_all = pd.concat(all_metrics, ignore_index=True)
     summary = summarize(metrics_all)
+
+    pivot = metrics_all.pivot_table(index="month", columns="variant", values="w_growth_ai")
+    print("\nGrowth weights by month:\n", pivot.round(6))
+    print("\nmacro_only - macro_robust:\n", (pivot["macro_only"] - pivot["macro_robust"]).round(8))
+
 
     metrics_all.to_csv(OUT_METRICS / "ablation_monthly.csv", index=False)
     summary.to_csv(OUT_METRICS / "ablation_summary.csv", index=False)
