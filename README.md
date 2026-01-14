@@ -1,4 +1,4 @@
-![Logo1](KCL.png) ![Logo2](SGM.png)
+![KCL Logo](KCL.png) ![SGM Logo](SGM.png)
 
 # Strand Global Macro Quant Competition  
 
