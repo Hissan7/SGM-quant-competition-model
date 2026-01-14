@@ -1,8 +1,8 @@
-![KCL Logo](assets/KCL.png) ![SGM Logo](assets/SGM.png)
+![KCL Logo](assets/KCL.png) ![SGM Logo](assets/SGM.jpg)
 
 # Strand Global Macro Quant Competition  
 
-**Macro-Driven Portfolio Optimisation with Risk, Turnover, and Dividend Awareness**
+**Macro-Driven Portfolio Optimisation framework with Risk, Turnover, and Dividend Awareness**
 
 This project is a supervised cross-sectional return model using sell-side information and uncertainty-aware signals, integrated into a robust, constrained portfolio optimisation framework.
 
