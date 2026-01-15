@@ -1,0 +1,26 @@
+Equity,Ticker,Region,Industry,Price,SellSideTarget,TargetRange,RangeLow,RangeHigh,target_return,range_mid,range_mid_return,range_width
+Total Energies,TTE,EU,Oil and Gas,70.0,73.0,$75-$85,75.0,85.0,0.04285714285714293,80.0,0.1428571428571428,0.14285714285714285
+J.M. Smucker,SJM,US,Consumer Staples,99.0,116.0,$140-$160,140.0,160.0,0.1717171717171717,150.0,0.5151515151515151,0.20202020202020202
+Vinci,DG.VI,EU,Construction and Engineering,120.0,131.0,$160-$180,160.0,180.0,0.09166666666666656,170.0,0.41666666666666674,0.16666666666666666
+Bloom Energy,1ZB.F,US,Energy/Data-Centers,88.0,111.0,,,,0.26136363636363646,,,
+Robinhood,7KY.F,US,Finance,118.0,151.0,,,,0.27966101694915246,,,
+Alphabet,GOOG,US,Technology,320.0,330.0,,,,0.03125,,,
+Nvdia,NVDA,US,Technology,185.0,250.0,,,,0.3513513513513513,,,
+Amazon,AMZN,US,Consumer Cyclical,225.0,300.0,,,,0.33333333333333326,,,
+Pfizer,PFE,US,Healthcare,25.0,29.0,,,,0.15999999999999992,,,
+General Mills,GIS,US,Consumer Staples,47.0,51.0,,,,0.0851063829787233,,,
+Pets at Home,PAHGF,UK,Retail (Pets),2.0,2.3,,,,0.1499999999999999,,,
+Darling Ingredients,DAG,US,Consumer Staples,35.0,47.0,,,,0.34285714285714275,,,
+Nu Holding,NU,BRZ,Fintech,17.0,19.0,,,,0.11764705882352944,,,
+Northland Power,NPIFF,CA,Energy,13.0,22.0,,,,0.6923076923076923,,,
+Cogeco Communications,CCA.TO,CA,Telecommunications,66.0,73.0,,,,0.10606060606060597,,,
+BCE Inc,BCE,CA,Telecommunications,23.0,26.0,,,,0.13043478260869557,,,
+DaVita,DVA,US,Healthcare,113.0,144.0,,,,0.2743362831858407,,,
+Amrize,AMRZ,US,Construction Materials,55.0,58.0,,,,0.05454545454545445,,,
+CoreWeave,CRWV,US,Technology (AI/Computing),75.0,127.0,,,,0.6933333333333334,,,
+Biogen,BIIB,US,Biotechnology,176.0,183.0,,,,0.03977272727272729,,,
+VeriSign Inc,VRSN,US,Telecommunications,245.0,295.0,,,,0.20408163265306123,,,
+Constellation Brand,STZ,US,Consumer Staples (alchol),138.0,170.0,,,,0.2318840579710144,,,
+Johnson Services Group,JSG.L,UK,Industrials/Textile,135.0,187.0,,,,0.3851851851851851,,,
+Axa Insurance,AXA SA,EU,Insurance,41.0,45.0,,,,0.09756097560975618,,,
+Vertiv,VRT,US,Industrials Components (Data centers),165.0,196.0,,,,0.18787878787878798,,,
