@@ -285,9 +285,13 @@ Saved:
 [4 rows x 8 columns]
 ```
 
+### 3. The optimiser machine 
 
+### 4. Additional functionality 
 
+### 5. Pipeline explanation 
 
+### 6. 
 
 
 Author: Hissan Omar  
