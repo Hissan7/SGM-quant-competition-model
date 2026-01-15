@@ -5,5 +5,3 @@ matplotlib
 cvxpy
 scikit-learn
 yfinance
-contextlib
-io
