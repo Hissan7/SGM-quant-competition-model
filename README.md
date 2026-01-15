@@ -287,7 +287,185 @@ Saved:
 
 ### 3. The optimiser machine 
 
+`optimiser.py` is the brain of the entire project.
+
+It takes the universe of stocks and decides the following :
+
+- How much to allocate to each stock (weights)
+    While enforcing real-world rules:
+
+    - Each stock between 1% and 5%
+    - Portfolio turnover ≤ 30% per month
+    - Macro bucket rotation rules (defensive → growth)
+    - Volatility cap (target 5–10%, however capped at 10%)
+    - Small transaction costs
+
+#### Outputs 
+
+The output each month is:
+
+`w_opt`: vector of portfolio weights (one per ticker)
+`info`: diagnostics (turnover, objective, macro weights, predicted vol, slack used)
+
 ### 4. Additional functionality 
+
+This project is split into small modules so each part of the pipeline is easy to test and explain. Below is a quick description of what each file does, and what outputs you should expect.
+
+#### `src/data_prep.py` — build the cleaned universe dataset
+
+Purpose: Converts the raw Excel universe into a clean universe.csv used by the optimizer and evaluation code.
+
+What it does:
+
+Loads the raw Excel (default: `data/raw/universe.xlsx`)
+
+- Standardises column names and drops empty rows
+- Creates key modelling columns such as:
+    1. target_return (expected return signal based on target vs current price)
+    2. range_width (uncertainty proxy)
+    3. Saves the cleaned dataset
+
+Run:
+
+```sh
+python -m src.data_prep
+```
+
+Outputs:
+data/processed/universe.csv
+
+(Note : The processed `universe.csv` file has already been aded into this repository hence there is no need to run this file. It was simply added to fully justify the development and structure of the pipeline)
+
+
+#### `src/macro_controller.py` — macro rotation logic + sector bucketing
+
+Purpose: Implements the competition’s macro rule: start defensive-heavy, then rotate into growth over ~6–9 months.
+
+What it does:
+
+- add_buckets(df) assigns each equity into one of the strategy buckets:
+DEFENSIVE, GROWTH_AI, CYCLICAL_NEUTRAL
+
+- macro_targets(month, horizon_months=...) generates time-varying constraints:
+
+    1. defensive minimum decreases through time
+    2. growth minimum increases through time
+    3. growth maximum can cap exposure if needed
+
+Outputs: No files saved directly (it provides constraints and labels to the optimizer).
+
+
+#### `src/ml_signal.py` — ML-based expected returns + uncertainty estimates
+
+Purpose: Produces a smarter (data-driven) estimate of expected returns (mu) and uncertainty (sigma_ml) from the dataset features.
+
+What it does:
+
+- Builds a feature matrix from the universe data (numerical + categorical bucket features)
+- Fits a regularised regression model
+- Uses bootstrapping to estimate uncertainty (prediction dispersion)
+
+Returns:
+    - mu = predicted expected returns
+    - sigma_ml = uncertainty per asset (used for robust optimisation)
+
+Outputs: No files saved directly (feeds signals into the optimizer).
+
+
+#### `src/risk_model.py` — covariance / volatility forecasting (risk model)
+
+Purpose: Builds a portfolio risk model from historical market prices so we can constrain volatility.
+
+What it does:
+
+- Downloads historical close prices (Yahoo Finance)
+- Converts to daily returns
+- Builds a covariance matrix using EWMA (exponentially weighted moving average)
+
+Returns:
+
+- Sigma (covariance matrix)
+- metadata including:
+    1. tickers used successfully (good)
+    2. tickers dropped (bad)
+    3. number of observations used
+
+Outputs: No files saved directly (Sigma is passed into the optimizer).
+
+
+#### `src/dividends.py` — dividend yield awareness
+
+Purpose: Implements the “consider dividends” part of the brief.
+
+What it does:
+
+`dividend_yield_ttm(tickers, period="1y")` downloads recent dividend information and estimates dividend yield (TTM-style).
+
+Returns:
+
+- dict mapping `ticker -> dividend_yield`
+- metadata with `good/bad` tickers
+
+Where it’s used:
+
+In `simulate.py`, yields are mapped into `df["dividend_yield"]`
+
+It then plots:
+
+- `results/plots/dividend_by_bucket.png` (avg dividend yield by sector bucket)
+
+Outputs (via simulate):
+
+`results/plots/dividend_by_bucket.png`
+
+
+#### `src/performance.py` — backtest + evaluation + plots
+
+Purpose: Converts monthly weights into a daily equity curve and performance statistics.
+
+What it does:
+
+- Downloads daily prices
+- Builds portfolio daily returns from weights
+
+Computes:
+
+    - annualised return
+    - annualised volatility
+    - Sharpe ratio
+    - max drawdown
+    - rolling Sharpe (63 trading days)
+
+It also Produces plots.
+
+Typical outputs:
+
+`results/plots/equity_curve.png`
+`results/plots/drawdown.png`
+`results/plots/rolling_sharpe.png`
+
+
+#### `src/run_once.py` — debug / inspection tool (weights per month)
+
+Purpose: Quick inspection script to print portfolio weights and diagnostics month-by-month without running the full simulation/plot pipeline.
+
+What it does:
+
+- Loads `data/processed/universe.csv`
+- Calls `solve_weights()` for each month
+
+Prints:
+
+- optimisation diagnostics (`info`)
+- full weights table
+
+Run:
+
+```sh
+python -m src.run_once
+```
+
+Outputs: Prints to terminal only (no files saved).
 
 ### 5. Pipeline explanation 
 
