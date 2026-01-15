@@ -311,6 +311,7 @@ The output each month is:
 
 This project is split into small modules so each part of the pipeline is easy to test and explain. Below is a quick description of what each file does, and what outputs you should expect.
 
+
 #### `src/data_prep.py` — build the cleaned universe dataset
 
 Purpose: Converts the raw Excel universe into a clean universe.csv used by the optimizer and evaluation code.
@@ -337,13 +338,15 @@ data/processed/universe.csv
 (Note : The processed `universe.csv` file has already been aded into this repository hence there is no need to run this file. It was simply added to fully justify the development and structure of the pipeline)
 
 
+
+
 #### `src/macro_controller.py` — macro rotation logic + sector bucketing
 
 Purpose: Implements the competition’s macro rule: start defensive-heavy, then rotate into growth over ~6–9 months.
 
 What it does:
 
-- add_buckets(df) assigns each equity into one of the strategy buckets:
+- `add_buckets(df)` assigns each equity into one of the strategy buckets:
 DEFENSIVE, GROWTH_AI, CYCLICAL_NEUTRAL
 
 - macro_targets(month, horizon_months=...) generates time-varying constraints:
@@ -353,6 +356,8 @@ DEFENSIVE, GROWTH_AI, CYCLICAL_NEUTRAL
     3. growth maximum can cap exposure if needed
 
 Outputs: No files saved directly (it provides constraints and labels to the optimizer).
+
+
 
 
 #### `src/ml_signal.py` — ML-based expected returns + uncertainty estimates
@@ -366,10 +371,13 @@ What it does:
 - Uses bootstrapping to estimate uncertainty (prediction dispersion)
 
 Returns:
-    - mu = predicted expected returns
-    - sigma_ml = uncertainty per asset (used for robust optimisation)
+
+   - mu = predicted expected returns
+   - sigma_ml = uncertainty per asset (used for robust optimisation)
 
 Outputs: No files saved directly (feeds signals into the optimizer).
+
+
 
 
 #### `src/risk_model.py` — covariance / volatility forecasting (risk model)
@@ -391,6 +399,8 @@ Returns:
     3. number of observations used
 
 Outputs: No files saved directly (Sigma is passed into the optimizer).
+
+
 
 
 #### `src/dividends.py` — dividend yield awareness
@@ -419,6 +429,8 @@ Outputs (via simulate):
 `results/plots/dividend_by_bucket.png`
 
 
+
+
 #### `src/performance.py` — backtest + evaluation + plots
 
 Purpose: Converts monthly weights into a daily equity curve and performance statistics.
@@ -430,11 +442,11 @@ What it does:
 
 Computes:
 
-    - annualised return
-    - annualised volatility
-    - Sharpe ratio
-    - max drawdown
-    - rolling Sharpe (63 trading days)
+- annualised return
+- annualised volatility
+- Sharpe ratio
+- max drawdown
+- rolling Sharpe (63 trading days)
 
 It also Produces plots.
 
@@ -443,6 +455,8 @@ Typical outputs:
 `results/plots/equity_curve.png`
 `results/plots/drawdown.png`
 `results/plots/rolling_sharpe.png`
+
+
 
 
 #### `src/run_once.py` — debug / inspection tool (weights per month)
@@ -469,10 +483,13 @@ Outputs: Prints to terminal only (no files saved).
 
 ### 5. Pipeline explanation 
 
-### 6. 
+`data_prep.py` builds the universe → `macro_controller.py` defines “how we want to rotate” → `risk_model.py` + `ml_signal.py` define risk/return inputs → `optimiser.py` chooses weights each month → `simulate.py`/`performance.py` turn those weights into metrics and plots → `ablation.py` compares variants.
+
+### Thank you 
+
+Please email me on hissan.omar@kcl.ac.uk if you would like to know any further details about this model. It was great fun making this project and acted as a strong reminder of the fundamental principles in portfolio optimisation. Thank you for reading !
 
 
-Author: Hissan Omar  
-Competition: Strand Global Macro Quant Competition (KCL Quant Society)  
-Submission Type: Quantitative Research Document + Codebase  
-Language: Python  
+**Author: Hissan Omar**
+**Msci Artificial Intelligence**
+**King's College London**
