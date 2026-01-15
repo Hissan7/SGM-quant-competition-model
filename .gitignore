@@ -13,4 +13,4 @@ venv/
 
 # Data 
 results/
-data/processed.DS_Store
+data/processed
