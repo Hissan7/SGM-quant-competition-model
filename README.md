@@ -490,6 +490,4 @@ Outputs: Prints to terminal only (no files saved).
 Please email me on hissan.omar@kcl.ac.uk if you would like to know any further details about this model. It was great fun making this project and acted as a strong reminder of the fundamental principles in portfolio optimisation. Thank you for reading !
 
 
-**Author: Hissan Omar**
-**Msci Artificial Intelligence**
-**King's College London**
+**Hissan Omar | Msci Artificial Intelligence | King's College London**
